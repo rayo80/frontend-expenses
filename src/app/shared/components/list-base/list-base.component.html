@@ -1,0 +1,131 @@
+
+
+
+<app-crud-layout [entity]="title"
+                 [main]="_main">
+
+      <button headerLeft
+              mat-icon-button
+              [matMenuTriggerFor]="tableMenu">
+          <mat-icon [svgIcon]="'heroicons_outline:ellipsis-vertical'"></mat-icon>
+      </button>
+      <button headerRight
+        color="primary"
+        *ngIf="canCreate"
+        (click)="onCreate()"
+        mat-raised-button>
+        <mat-icon class="icon-size-2">add</mat-icon>
+        <span class="ml-2 hidden sm:block">Crear</span>
+    </button>
+
+      <mat-menu headerLeft #tableMenu="matMenu" [overlapTrigger]="false">
+          <button mat-menu-item *ngFor="let header of fieldsHeader" (click)="toggleColumn($event, header)">
+            <mat-icon *ngIf="header?.show">check_box</mat-icon>
+            <mat-icon *ngIf="!header?.show">check_box_outline_blank</mat-icon>
+            <span>{{header?.name}}</span>
+      </button>
+      </mat-menu>
+      <table body 
+        mat-table 
+        matSort 
+        matSortDirection="desc"
+        [dataSource]="dataSource" >
+        <!--Como ahora no conocemos los campos de nuestro datasource
+        lo-->
+        <div *ngFor="let field of fieldsHeader">
+          <ng-container matColumnDef="{{field.code}}">
+              <th
+                  mat-header-cell
+                  mat-sort-header
+                  *matHeaderCellDef
+                  class="bg-gray-50 dark:bg-accent-700"
+                  >
+                  {{field.name}}
+              </th>
+              <td
+                  mat-cell
+                  *matCellDef="let element"
+                  [ngSwitch]="field.type"
+                  [ngClass]="field.class">
+                  <span class="primary">
+                      {{element[field.code]}}
+                  </span>
+              </td>
+          </ng-container>
+        </div>
+    
+        <ng-container matColumnDef="Editar">
+          <th mat-header-cell *matHeaderCellDef> Editar </th>
+    
+          <td mat-cell *matCellDef="let element" >
+            <button mat-raised-button color="primary" (click)="onUpdate(element)">
+                <mat-icon aria-hidden="false" aria-label="Example edit icon">edit</mat-icon>
+                Edit
+              </button>
+          </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Eliminar">
+          <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+    
+          <td mat-cell *matCellDef="let element" >
+            <button mat-raised-button color="primary" (click)="onDelete(element)">
+                <mat-icon aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
+                Delete
+              </button>
+          </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Detalle">
+          <th mat-header-cell *matHeaderCellDef> Ver mas</th>
+    
+          <td mat-cell *matCellDef="let element" >
+            <button mat-raised-button color="primary" (click)="onDetail(element)">
+                <mat-icon aria-hidden="false" aria-label="Example delete icon">search</mat-icon>
+                Ver mas
+              </button>
+          </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row 
+          *matRowDef="let row; columns: displayedColumns;"
+          class="order-row h-16"
+          (click)="onClickRow(row)"
+          (contextmenu)="onContextMenu($event, row)"
+        ></tr>   
+      </table>
+      <mat-paginator
+          footer
+          [pageSizeOptions]="[5, 10, 25, 50]" 
+          aria-label="Select page"
+          class="sm:inset-x-0 sm:bottom-0 border-b sm:border-t 
+          sm:border-b-0 z-10 bg-gray-50 dark:bg-accent-700 sm:mx-4 sm:mb-4 sm:rounded-b-2xl"
+          tabindex="-1"
+          [class.sm:absolute]="false"
+          showFirstLastButtons
+          >
+      </mat-paginator>
+      <ng-container *ngIf="menuItems.length > 0">
+        <div #menuTrigger style="visibility: hidden; position: fixed"
+             [style.left]="contextMenuPosition.x"
+             [style.top]="contextMenuPosition.y"
+             [matMenuTriggerFor]="menu">
+        </div>
+
+        <mat-menu #menu="matMenu" [overlapTrigger]="false" hasBackdrop="true">
+            <ng-template matMenuContent let-element="element">
+                <button *ngFor="let menuItem of menuItemsFiltered; let i=index; trackBy: trackByMenu"
+                        (click)="onClickMenu(element, menuItem)"
+                        mat-menu-item>
+                    <mat-icon *ngIf="menuItem.icon">{{menuItem.icon}}</mat-icon>
+                    {{menuItem.label}}
+                </button>
+            </ng-template>
+        </mat-menu>
+    </ng-container>
+</app-crud-layout>
+
+
+
+

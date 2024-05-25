@@ -1,0 +1,43 @@
+<div *ngIf="main"
+     class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <ng-container *ngTemplateOutlet="layout"></ng-container>
+</div>
+
+<div *ngIf="!main">
+    <ng-container *ngTemplateOutlet="layout"></ng-container>
+</div>
+
+<ng-template #layout>
+    <div class="flex w-full max-w-screen-xl mx-auto p-6 gap-2 flex-col">
+        <!--TITLE-->
+        <div class="flex gap-2 flex-col md:flex-row">
+            <div class="flex items-center m-auto sm:ml-2 gap-2">
+                <span class="text-3xl align-middle font-semibold tracking-tight leading-8 pt-1">{{entity}}</span>
+                <div class="font-medium tracking-tight text-secondary">
+                    <ng-content select="[headerLeft]"></ng-content>
+                </div>
+                
+            </div>
+            <div class="grow m-auto">
+                <ng-content select="[headerCenter]"></ng-content>
+            </div>
+            <div class="flex items-center m-auto sm:mr-2 gap-2">
+                <ng-content select="[headerRight]"></ng-content>
+            </div>
+        </div>
+        <div class="-mb-6">
+            <ng-content select="[nav]"></ng-content>
+        </div>
+
+    </div>
+    <!--LIST -->
+    <div class="flex flex-auto flex-col overflow-hidden">
+        <div class="flex flex-col flex-auto xl:col-span-2 mx-4 bg-card shadow rounded-t-2xl overflow-hidden"
+             fuseScrollbar>
+            <ng-content select="[body]"></ng-content>
+        </div>
+    </div>
+    <ng-content select="[footer]"></ng-content>
+
+    <ng-content></ng-content>
+</ng-template>

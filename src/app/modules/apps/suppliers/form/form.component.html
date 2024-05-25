@@ -1,0 +1,56 @@
+
+
+<div class="flex flex-col gap-2">
+    <h3 mat-dialog-title class="grow text-3xl font-semibold">Formulario </h3>
+    <mat-dialog-content class="p-2">
+        <form [formGroup]="formInstance" class="grid grid-cols-12 grid-flow-row gap-2 max-w-screen-sm">
+            <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Codigo</mat-label>
+                <input formControlName="codigo" matInput>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-8">
+                <mat-label>Nombre</mat-label>
+                <input formControlName="nombre" matInput>
+                <mat-error *ngIf="formInstance.get('nombre')?.errors?.['required']"
+                [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Tipo de Documento</mat-label>
+                <mat-select formControlName="tipo_documento">
+                    <mat-option *ngFor="let documento of doc_identidad_tipos" [value]="documento.id">
+                      {{documento.codigo +'-'+ documento.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-8">
+                <mat-label>Numero de Documento</mat-label>
+                <input formControlName="num_documento" matInput>
+                <mat-error *ngIf="formInstance.get('num_documento')?.errors?.['required']"
+                [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-12">
+                <mat-label>Razon</mat-label>
+                <input formControlName="razon" matInput>
+                <mat-error *ngIf="formInstance.get('razon')?.errors?.['required']"
+                [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-12">
+                <mat-label>Direccion</mat-label>
+                <input formControlName="addres" matInput>
+                <mat-error *ngIf="formInstance.get('addres')?.errors?.['required']"
+                [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+        </form>
+    
+        <div class="alert alert-danger" *ngIf="error">
+            Los campos no han sido rellanados correctamente
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-raised-button (click)="onSubmit()" color="primary">Guardar</button>
+    </mat-dialog-actions>
+</div>
