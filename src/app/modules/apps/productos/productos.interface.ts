@@ -23,7 +23,5 @@ export class ProductModel {
         this.name = data.name;
         this.precio = data.price
     }
-    
-
 
 }

@@ -141,7 +141,6 @@ export class PurchasesFormComponent {
         this.formInstance.get('total')?.patchValue(this.instanceToEdit.total);
         this.formInstance.get('fecha_vencimiento')?.patchValue(this.instanceToEdit.fecha_vencimiento);
         this.formInstance.get('fecha_documento')?.patchValue(this.instanceToEdit.fecha_documento);
-        console.log("item", this.instanceToEdit)
         this.dataSource.data = this.instanceToEdit.items
       })
   }
@@ -191,7 +190,8 @@ export class PurchasesFormComponent {
     let item: SvPurchaseItemSchema;
     let producto: any
 
-    (this.formInstance.get('items') as FormArray)?.push(this.formInstanceItem);
+    // antes agregaba de frente uno por uno ..porque nop eran objetos
+    // (this.formInstance.get('items') as FormArray)?.push(this.formInstanceItem);
 
     //seteo la data al formulario
 
@@ -201,7 +201,7 @@ export class PurchasesFormComponent {
         (val) => producto = val
       )
 
-      let itemModel = new PurchasesItemModel({
+      const itemModel = new PurchasesItemModel({
         "id": null,
         "producto": producto,
         "total": this.formInstanceItem.get('total')?.value,
@@ -211,11 +211,23 @@ export class PurchasesFormComponent {
       // Actualizo la lista de items y seteo el valor de items en la lista
       this.itemsTableForm.push(itemModel)
       this.dataSource.data = this.itemsTableForm
-      this.formInstance.value["items"] = this.itemsTableForm.map(item => item.itemForm());
+      // this.formInstance.value["items"] = this.itemsTableForm.map(item => item.itemForm());
+      const formatTable = this.itemsTableForm.map(item => item.itemForm())
+      console.log("lista", this.fbuild.array(formatTable))
+      
+      
+      this.formInstance.setControl(
+        "items",
+        this.fbuild.array(formatTable)
+      );
+      console.log("lista", this.formInstance.value["items"])
+      console.log("table form", this.itemsTableForm)
       this.table.renderRows();
 
       // seteo el total en el formulario grande segun los items hijos
       this.formInstance.get('total')?.patchValue(this.formInstance.get('total').value + this.formInstanceItem.get('total').value)
+      console.log("form isntance", this.formInstance)
+      console.log("items form instance", this.itemsTableForm)
       this.formInstanceItem.reset();
     }
 
