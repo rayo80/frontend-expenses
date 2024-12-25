@@ -37,7 +37,7 @@ export class PurchasesFormComponent {
 
   formInstance:FormGroup;
   formInstanceItem:FormGroup
-  instanceToEdit:PurchasesDetailModel; //inscripcion a ser editado
+  instanceToEdit:PurchasesDetailModel; //data de los items editados
 
   error=false;
   
@@ -46,7 +46,7 @@ export class PurchasesFormComponent {
   products:ProductModel[]
   monedas:MonedaModel[]
 
-  itemsTableForm: PurchasesItemModel[] = []
+  itemsTableForm: PurchasesItemModel
 
   @Output() refreshTable:boolean = false;
   
@@ -194,7 +194,7 @@ export class PurchasesFormComponent {
     // (this.formInstance.get('items') as FormArray)?.push(this.formInstanceItem);
 
     //seteo la data al formulario
-
+    console.log("actual table", this.itemsTableForm)
     if (this.formInstanceItem.status != 'INVALID') {
 
       this.productsService.getItemById(this.formInstanceItem.get("producto")?.value).subscribe(
@@ -209,17 +209,22 @@ export class PurchasesFormComponent {
       })
 
       // Actualizo la lista de items y seteo el valor de items en la lista
-      this.itemsTableForm.push(itemModel)
+      console.log("antes", this.itemsTableForm)
+
+
+      this.dataSource.data.push(itemModel)
+      const formatTable = this.dataSource.data.map(item => item.itemForm())
+      /*this.itemsTableForm.push(itemModel)
+      console.log("despues", this.itemsTableForm)
       this.dataSource.data = this.itemsTableForm
-      // this.formInstance.value["items"] = this.itemsTableForm.map(item => item.itemForm());
-      const formatTable = this.itemsTableForm.map(item => item.itemForm())
-      console.log("lista", this.fbuild.array(formatTable))
-      
+
+      const formatTable = this.itemsTableForm.map(item => item.itemForm())*/
+
       
       this.formInstance.setControl(
         "items",
         this.fbuild.array(formatTable)
-      );
+      )
       console.log("lista", this.formInstance.value["items"])
       console.log("table form", this.itemsTableForm)
       this.table.renderRows();
