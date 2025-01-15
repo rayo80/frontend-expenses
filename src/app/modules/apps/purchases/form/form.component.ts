@@ -15,6 +15,7 @@ import { ProductModel, SvProductSchema } from '../../productos/productos.interfa
 import { Observable, finalize, map, mergeMap, of, tap, filter, switchMap, takeUntil, take, Subject } from 'rxjs';
 import { MonedasService } from '../../monedas/monedas.service';
 import { MonedaModel } from '../../monedas/monedas.interface';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class PurchasesFormComponent {
     private comprobantesTiposService: ComprobanteTiposService,
     public dialogRef:MatDialogRef<PurchasesFormComponent>) { }
 
+
   formInstance:FormGroup;
   formInstanceItem:FormGroup
   instanceToEdit:PurchasesDetailModel; //data de los items editados
@@ -53,6 +55,25 @@ export class PurchasesFormComponent {
   @ViewChild(MatTable) table: MatTable<PurchasesItemModel[]>;
   dataSource = new MatTableDataSource<PurchasesItemModel>();
   displayedColumns: string[] = ["producto", "cantidad", "total"];
+
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = {x: '0px', y: '0px'};
+  
+  onContextMenu(event: MouseEvent, row: PurchasesItemModel) {
+    console.log("item", row)
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { item: row };
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
+
+  onContextMenuAction1(item: PurchasesItemModel) {
+    console.log('context menu data 3', this.contextMenu.menuData);
+    this.deleteItem(item.producto.id)
+  }
 
   addInstance(instance:PurchasesDetailModel){
     this.principalService.createItem(instance).subscribe({
@@ -194,7 +215,14 @@ export class PurchasesFormComponent {
     // (this.formInstance.get('items') as FormArray)?.push(this.formInstanceItem);
 
     //seteo la data al formulario
-    console.log("actual table", this.itemsTableForm)
+    // console.log("actual table", this.itemsTableForm)
+    const items_filter = this.dataSource.data.filter(item => item.producto.id == this.formInstanceItem.get("producto")?.value)
+    if (items_filter.length > 0) {
+      return alert("El producto ya fue agregado")
+    }
+
+
+
     if (this.formInstanceItem.status != 'INVALID') {
 
       this.productsService.getItemById(this.formInstanceItem.get("producto")?.value).subscribe(
@@ -214,29 +242,32 @@ export class PurchasesFormComponent {
 
       this.dataSource.data.push(itemModel)
       const formatTable = this.dataSource.data.map(item => item.itemForm())
-      /*this.itemsTableForm.push(itemModel)
-      console.log("despues", this.itemsTableForm)
-      this.dataSource.data = this.itemsTableForm
 
-      const formatTable = this.itemsTableForm.map(item => item.itemForm())*/
 
-      
       this.formInstance.setControl(
         "items",
         this.fbuild.array(formatTable)
       )
-      console.log("lista", this.formInstance.value["items"])
-      console.log("table form", this.itemsTableForm)
+      // console.log("lista", this.formInstance.value["items"])
+      // console.log("table form", this.itemsTableForm)
       this.table.renderRows();
 
       // seteo el total en el formulario grande segun los items hijos
-      this.formInstance.get('total')?.patchValue(this.formInstance.get('total').value + this.formInstanceItem.get('total').value)
-      console.log("form isntance", this.formInstance)
-      console.log("items form instance", this.itemsTableForm)
+      // uso el total del form instanceItem pero tbn podria usar el del item de tabla, pero si o si antes de hacer el reset
+      this.formInstance.get('total')?.patchValue(this.formInstance.get('total').value 
+        + this.formInstanceItem.get('total').value)
+      // console.log("form isntance", this.formInstance)
+      // console.log("items form instance", this.itemsTableForm)
       this.formInstanceItem.reset();
     }
 
 
+  }
+
+  deleteItem(product_id: number){
+    const items_filter = this.dataSource.data.filter(item => item.producto.id == product_id)
+    this.dataSource.data = this.dataSource.data.filter(item => item.producto.id !== product_id)
+    this.formInstance.get('total')?.patchValue(this.formInstance.get('total').value - items_filter[0].total)
   }
 
   onSubmit(){
