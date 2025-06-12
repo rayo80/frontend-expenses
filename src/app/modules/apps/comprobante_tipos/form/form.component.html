@@ -1,0 +1,33 @@
+<div class="flex flex-col gap-2">
+  <h3 mat-dialog-title class="grow text-3xl font-semibold">Comprobante Tipo</h3>
+  <mat-dialog-content class="p-2">
+    <form [formGroup]="formInstance" class="grid grid-cols-8 gap-2 max-w-screen-sm">
+      <mat-form-field appearance="outline" disabled=True class="col-span-2">
+        <mat-label>Código</mat-label>
+        <input formControlName="codigo" matInput>
+        <mat-error *ngIf="formInstance.get('codigo')?.errors?.['required']"
+          class="text-xs">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" disabled=True class="col-span-6">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput>
+        <mat-error *ngIf="formInstance.get('nombre')?.errors?.['required']"
+          class="text-xs">Campo requerido</mat-error>
+      </mat-form-field>
+          <mat-form-field appearance="outline" class="col-span-8">
+            <mat-label>Cuenta</mat-label>
+            <mat-select formControlName="cta_default">
+                <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+                  {{cuenta.codigo + " - " + cuenta.descripcion}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </form>
+    <div class="alert alert-danger mt-2" *ngIf="error">
+      Los campos no han sido rellenados correctamente
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onSubmit()">Guardar</button>
+  </mat-dialog-actions>
+</div>

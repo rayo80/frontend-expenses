@@ -54,7 +54,7 @@ export class PurchasesFormComponent {
   
   @ViewChild(MatTable) table: MatTable<PurchasesItemModel[]>;
   dataSource = new MatTableDataSource<PurchasesItemModel>();
-  displayedColumns: string[] = ["producto", "cantidad", "total"];
+  displayedColumns: string[] = ["producto", "cantidad", "igv", "total"];
 
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
@@ -233,7 +233,7 @@ export class PurchasesFormComponent {
         "id": null,
         "producto": producto,
         "total": this.formInstanceItem.get('total')?.value,
-        "cantidad": this.formInstanceItem.get('cantidad')?.value
+        "cantidad": this.formInstanceItem.get('cantidad')?.value,
       })
 
       // Actualizo la lista de items y seteo el valor de items en la lista

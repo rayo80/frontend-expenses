@@ -1,0 +1,64 @@
+
+
+<div class="flex flex-col gap-2">
+    <h3 mat-dialog-title class="grow text-3xl font-semibold">Crear Producto </h3>
+    <mat-dialog-content class="p-2">
+        <form [formGroup]="formInstance" class="grid grid-cols-8 grid-flow-row gap-2 max-w-screen-sm">
+            <mat-form-field appearance="outline" class="col-span-3">
+                <mat-label>Codigo</mat-label>
+                <input formControlName="code" matInput>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-5">
+                <mat-label>Nombre</mat-label>
+                <input formControlName="name" matInput>
+                <mat-error *ngIf="formInstance.get('nombre')?.errors?.['required']"
+                [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Cuenta Ingreso</mat-label>
+                <mat-select formControlName="cta_ingreso">
+                    <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+                      {{cuenta.codigo +'-'+ cuenta.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Cuenta Salida</mat-label>
+                <mat-select formControlName="cta_salida">
+                    <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+                      {{cuenta.codigo +'-'+ cuenta.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="col-span-4 flex items-center">
+                <mat-slide-toggle color="primary" formControlName="se_vende">Se vende</mat-slide-toggle>
+            </div>
+            <div class="col-span-4 flex items-center">
+                <mat-slide-toggle color="primary" formControlName="se_compra">Se compra</mat-slide-toggle>
+            </div>
+            <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Precio Venta</mat-label>
+                <input formControlName="price" matInput>
+                <mat-error *ngIf="formInstance.get('price')?.errors?.['required']"
+                    [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+                <mat-form-field appearance="outline" class="col-span-4">
+                <mat-label>Precio Compra</mat-label>
+                <input formControlName="purchase_price" matInput>
+                <mat-error *ngIf="formInstance.get('purchase_price')?.errors?.['required']"
+                    [style.font-size]="'x-smaller'"
+                >Campo requerido</mat-error>
+            </mat-form-field>
+
+        </form>
+    
+        <div class="alert alert-danger" *ngIf="error">
+            Los campos no han sido rellanados correctamente
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-raised-button (click)="onSubmit()" color="primary">Guardar</button>
+    </mat-dialog-actions>
+</div>

@@ -33,9 +33,9 @@
               </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col-span-5" disabled="True">
+        <mat-form-field appearance="outline" class="col-span-5" disabled="true">
           <mat-label>Total</mat-label>
-          <input formControlName="total" matInput>
+          <input formControlName="total" matInput readonly>
           <mat-error *ngIf="formInstance.get('total')?.errors?.['required']"
                 [style.font-size]="'x-smaller'"
           >Campo requerido</mat-error>
@@ -71,6 +71,7 @@
                   [style.font-size]="'x-smaller'"
             >Campo requerido</mat-error>
           </mat-form-field>
+          
           <mat-form-field appearance="outline" class="col-span-2">
             <mat-label>Cantidad</mat-label>
             <input type="number" formControlName="cantidad" matInput>
@@ -95,6 +96,10 @@
                 <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
               </ng-container>
             
+              <ng-container matColumnDef="igv">
+                <th mat-header-cell *matHeaderCellDef> Igv </th>
+                <td mat-cell *matCellDef="let element"> {{element.igv}} </td>
+              </ng-container>
               <!-- Weight Column -->
               <ng-container matColumnDef="total">
                 <th mat-header-cell *matHeaderCellDef> Total </th>

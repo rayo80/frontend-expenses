@@ -61,7 +61,7 @@ export class ListBaseComponent<IModel extends ICrudModel, Response>
   canCreate: boolean = true;
   canEdit: boolean = true;
   canDelete: boolean = true;
-  displayedColumns: string[] = ["prodcuto", "cantidad", "total"];
+  displayedColumns: string[] = ["producto", "cantidad", "total"];
   // error: any = null;
   
 

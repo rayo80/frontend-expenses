@@ -1,22 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
 import { ListComponent } from './list/list.component';
 import { SharedModule } from 'app/shared/shared.module';
-import { ComprobanteTiposRoutingModule } from './comprobante_tipos-routing.module';
-import { FormComponent } from './form/form.component';
+import { PaymentsRoutingModule } from './payments-routing.module';
+import { PaymentsFormComponent } from './form/form.component';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
+
 
 
 @NgModule({
   declarations: [
     ListComponent,
-    FormComponent
+    PaymentsFormComponent
   ],
   imports: [
+    FuseScrollbarDirective,
     CommonModule,
     SharedModule,
-    ComprobanteTiposRoutingModule
+    PaymentsRoutingModule
   ]
 })
-export class ComprobanteTiposModule { }
-
+export class PaymentsModule { }

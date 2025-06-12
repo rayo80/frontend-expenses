@@ -5,17 +5,19 @@ import { PurchasesRoutingModule } from './purchases-routing.module';
 import { ListComponent } from './list/list.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { PurchasesFormComponent } from './form/form.component';
+import { PaymentsPurchaseFormComponent } from './payment-purchase-form/payment-purchase-form.component';
 
 
 @NgModule({
   declarations: [
     ListComponent,
-    PurchasesFormComponent
+    PurchasesFormComponent,
+    PaymentsPurchaseFormComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    PurchasesRoutingModule
+    PurchasesRoutingModule,
   ]
 })
 export class PurchasesModule { }

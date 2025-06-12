@@ -32,7 +32,11 @@ export class PurchasesItemModel {
         this.id = data.id;
         this.producto = data.producto;
         this.cantidad = data.cantidad;
-        this.total=data.total
+        this.total = data.total
+    }
+
+    get igv() : number {
+        return this.total * 0.18;
     }
 
     itemForm(){
@@ -40,6 +44,7 @@ export class PurchasesItemModel {
             producto: this.producto.id,
             cantidad: this.cantidad,
             total: this.total,
+            igv: this.igv
         }
     }
 }
@@ -57,6 +62,7 @@ export interface SvPurchasesSchema{
     abonado: number;
     moneda: SvMonedaSchema;
     total: number;
+    saldo: number;
 }
 
 export interface SvPurchaseDetailSchema extends SvPurchasesSchema{
@@ -76,6 +82,7 @@ export class PurchasesModel {
     fecha_vencimiento: Date;
     abonado: number;
     pagado: boolean;
+    saldo: number;
     total: number;
     
     constructor(data: SvPurchasesSchema){
@@ -90,6 +97,7 @@ export class PurchasesModel {
         this.pagado = data.pagada;
         this.observacion = data.observacion;
         this.proveedor = data.proveedor;
+        this.saldo = data.saldo;
     }
     
     get proveedorName() : string {

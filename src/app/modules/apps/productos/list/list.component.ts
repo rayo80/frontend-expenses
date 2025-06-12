@@ -1,6 +1,7 @@
 import { ProductsService } from './../productos.service';
 import { Component } from '@angular/core';
 import { IListColums } from 'app/shared/components/list-base/list-base.types';
+import { FormComponent } from '../form/form.component';
 
 
 @Component({
@@ -33,9 +34,24 @@ export class ListComponent {
       'code': 'precio',
       'show': true,
     },
+    {      
+      'name': 'Precio Compra',
+      'code': 'precio_compra',
+      'show': true,
+    },
+    {      
+      'name': 'Cuenta Ingresa',
+      'code': 'ctaIngresoCodigo',
+      'show': true,
+    },
+    {      
+      'name': 'Cuenta Salida',
+      'code': 'ctaSalidaCodigo',
+      'show': true,
+    },
 
 
   ]
 
-  modal = null
+  modal = FormComponent
 }

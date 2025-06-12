@@ -79,6 +79,8 @@ export const appRoutes: Route[] = [
             {path: 'comprobante_tipos', loadChildren: () => import('app/modules/apps/comprobante_tipos/comprobante_tipos.module').then(m => m.ComprobanteTiposModule)},
             {path: 'suppliers', loadChildren: () => import('app/modules/apps/suppliers/suppliers.module').then(m => m.SuppliersModule)},
             {path: 'productos', loadChildren: () => import('app/modules/apps/productos/productos.module').then(m => m.ProductosModule)},
+            {path: 'pagos', loadChildren: () => import('app/modules/apps/payments/payments.module').then(m => m.PaymentsModule)},
+            {path: 'transferencias', loadChildren: () => import('app/modules/apps/transferences/transferences.module').then(m => m.TransferencesModule)},
         ]
     }
 ];

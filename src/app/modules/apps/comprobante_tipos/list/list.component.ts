@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { IListColums } from 'app/shared/components/list-base/list-base.types';
 import { ComprobanteTiposService } from '../comprobante_tipos.service';
+import { FormComponent } from '../form/form.component';
 
 
 
@@ -30,7 +31,13 @@ export class ListComponent {
       'code': 'codigo',
       'show': true
     },
+        {      
+      'name': 'Cuenta Contable por Defecto',
+      'code': 'ctaDefaultName',
+      'show': true
+    },
   ]
 
   crudMethods = [];
+  modal: any = FormComponent
 }
