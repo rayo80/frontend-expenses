@@ -1,6 +1,6 @@
 
 // Removed unused import
-import { SuppliersService } from './../../suppliers/suppliers.service';
+import { SuppliersService } from '../../suppliers/suppliers.service';
 import { Component, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -24,15 +24,17 @@ import { CajaCentralService } from '../../caja_central/caja_central.service';
 import { CentralModel } from '../../caja_central/caja_central.interface';
 import { CuentaContableModel } from '../../cuentas_contables/cuentas_contables.interface';
 import { CuentasContablesService } from '../../cuentas_contables/cuentas_contables.service';
+import { ComprobanteTiposModel } from '../../comprobante_tipos/comprobante_tipos.interface';
+import { ComprobanteTiposService } from '../../comprobante_tipos/comprobante_tipos.service';
 // Removed unused import
 
 
 @Component({
-  selector: 'app-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  selector: 'app-payment-detail-form',
+  templateUrl: './payment_detail_form.component.html',
+  styleUrls: ['./payment_detail_form.component.scss']
 })
-export class PaymentsFormComponent {
+export class PaymentsDetailFormComponent {
 
   hasDetroyed$ = new Subject<boolean>();
 
@@ -45,8 +47,9 @@ export class PaymentsFormComponent {
       private purchasesServices: PurchasesService,
       private paymentMethodsServices: PaymentMethodsService,
       private centralsServices: CajaCentralService,
+      private comprobantesTipoService: ComprobanteTiposService,
       private cuentasContablesService: CuentasContablesService,
-      public dialogRef:MatDialogRef<PaymentsFormComponent>) { }
+      public dialogRef:MatDialogRef<PaymentsDetailFormComponent>) { }
 
 
   formInstance:FormGroup;
@@ -60,13 +63,15 @@ export class PaymentsFormComponent {
   metodos:ConstantsModel[]
   centrales:CentralModel[]
   cuentas: CuentaContableModel[]
+  igv_tipos: ConstantsModel[]
+  comprobante_tipos: ComprobanteTiposModel[]
   tipoOperacion: number = 1;
 
   @Output() refreshTable:boolean = false;
     
 
   addInstance(instance:PaymentModel){
-      this.principalService.createItem(instance).subscribe({
+      this.principalService.createDirectItem(instance).subscribe({
       complete: ()=>{this.dialogRef.close();}}
   )}
 
@@ -111,7 +116,9 @@ export class PaymentsFormComponent {
     
   getProducts(){
       this.productsService.getListCache()
-        .pipe(takeUntil(this.hasDetroyed$))
+        .pipe(
+          takeUntil(this.hasDetroyed$),
+          map(products => products.filter(product => product.se_compra === true))) // Filtra productos activos
         .subscribe(
         (val) => this.products = val  
         )
@@ -152,6 +159,35 @@ export class PaymentsFormComponent {
     )
   }
 
+    getComprobantes(){
+    this.comprobantesTipoService.getListCache()
+        .pipe(takeUntil(this.hasDetroyed$))
+        .subscribe(
+          (val) => this.comprobante_tipos = val  
+    )
+  }
+
+
+  getCalculos(){
+
+    this.igv_tipos = [
+      { id: 1, name: 'IGV 18%' },
+      { id: 2, name: 'IGV 0%' },
+      { id: 3, name: 'Interno' },
+    ]
+  }
+
+  setAbonadoYIgv() {
+    const total = Number(this.formInstance.get('total')?.value) || 0;
+    const igvTipo = this.formInstance.get('igv_tipo')?.value;
+    const igv = igvTipo === 1 ? +(total * 18/118).toFixed(2) : 0;
+    console.log("IGV Tipo:", igvTipo, "Total:", total, "IGV Calculado:", igv);
+    this.formInstance.get('abonado')?.setValue(total, { emitEvent: false });
+    this.formInstance.get('igv')?.setValue(igv, { emitEvent: false });
+  }
+
+
+
   recallItem(){
     this.principalService.oneItem
       .pipe(
@@ -185,40 +221,79 @@ export class PaymentsFormComponent {
     this.getSuppliers()
     this.getProducts()
     this.getMonedas()
-    this.getCompras()
     this.getMethods()
     this.getCentrals()
     this.getCuentas()
+    this.getCalculos()
+    this.getComprobantes()
     this.formInstance = this.fbuild.group({
+      abonado: [null, [Validators.required]],
       tipo_operacion: [1, Validators.required],
-      compra: [null],
+      cantidad: [1, Validators.required],
       cuenta_gasto: [null],
       concepto: [null],
+      igv_tipo: [1],
       referencia: [null],
       moneda: ['', [Validators.required]],
       metodo: ['', [Validators.required]],
+      proveedor: [null],
       total: ['', [Validators.required]],
       num_documento: [null],
       fecha: ['', [Validators.required]],
       hora: ['', Validators.required],
+      igv: [null],
+      tipo_documento: [null, Validators.required],
       cargo: [null],
     })
 
+    this.formInstance.get('igv')?.disable();
+    this.formInstance.get('abonado')?.disable();
+
     // Cuando cambia la compra, setea la cuenta contable asociada
-    this.formInstance.get('compra')?.valueChanges
+    this.formInstance.get('tipo_documento')?.valueChanges
       .pipe(takeUntil(this.hasDetroyed$))
-      .subscribe(compraId => {
-        console.log("Compra seleccionada:", compraId);
-        if (compraId && this.compras) {
-          const compraSeleccionada: PurchasesModel = this.compras.find(c => c.id === compraId);
-          console.log("Compra encontrada:", compraSeleccionada.tipo_documento);
+      .subscribe(comprobanteId => {
+        if (comprobanteId && this.comprobante_tipos) {
+          const comprobante_tipo: ComprobanteTiposModel = this.comprobante_tipos.find(c => c.id === comprobanteId);
           // Ajusta el nombre del campo según tu modelo de compra
-          if (compraSeleccionada && compraSeleccionada.tipo_documento){
-            console.log("Cuenta contable por defecto:", compraSeleccionada.tipo_documento.cta_default);
-            this.formInstance.get('cuenta_gasto')?.setValue(compraSeleccionada.tipo_documento.cta_default);
+          console.log("Compra seleccionada:", comprobante_tipo);
+          if (comprobante_tipo && comprobante_tipo.cta_default){
+            this.formInstance.get('cuenta_gasto')?.setValue(comprobante_tipo.cta_default.id);
           }
         }
       });
+
+    this.formInstance.get('concepto')?.valueChanges
+      .pipe(takeUntil(this.hasDetroyed$))
+      .subscribe(productoId => {
+        const comprobanteId = this.formInstance.get('tipo_documento')?.value;
+        const comprobante = this.comprobante_tipos?.find(c => c.id === comprobanteId);
+
+        // Si el comprobante es tipo 0 o no tiene cta_default
+        if (comprobante && (comprobante.codigo === 0 || !comprobante.cta_default)) {
+          const productoSeleccionado = this.products?.find(p => p.id === productoId);
+          if (productoSeleccionado && productoSeleccionado.cta_salida) {
+            this.formInstance.get('cuenta_gasto')?.setValue(productoSeleccionado.cta_salida.id);
+          }
+        }
+      });
+
+
+
+    this.formInstance.get('total')?.valueChanges
+      .pipe(takeUntil(this.hasDetroyed$))
+      .subscribe(total => {
+        this.setAbonadoYIgv();
+      });
+
+    this.formInstance.get('igv_tipo')?.valueChanges
+      .pipe(takeUntil(this.hasDetroyed$))
+      .subscribe(() => {
+        this.setAbonadoYIgv();
+      });
+
+
+
 
     this.recallItem()
 
@@ -229,41 +304,15 @@ export class PaymentsFormComponent {
   }
 
 
-onTipoOperacionChange() {
-  this.tipoOperacion = this.formInstance.get('tipo_operacion')?.value;
-
-  // Limpia los valores y validadores
-  this.formInstance.get('compra')?.reset();
-  this.formInstance.get('cuenta_gasto')?.reset();
-  this.formInstance.get('concepto')?.reset();
-
-  // Primero, limpia todos los validadores
-  this.formInstance.get('compra')?.clearValidators();
-  this.formInstance.get('cuenta_gasto')?.clearValidators();
-  this.formInstance.get('concepto')?.clearValidators();
-
-  if (this.tipoOperacion === 1) {
-    // Pago de Compra: compra y cuenta_destino requeridos
-    this.formInstance.get('compra')?.setValidators([Validators.required]);
-  } else if (this.tipoOperacion === 3) {
-    // Egreso con Concepto: cuenta_destino requerido, concepto podría ser requerido si lo usas
-    // Si concepto es requerido, descomenta:
-    this.formInstance.get('concepto')?.setValidators([Validators.required]);
-  }
-
-  // Actualiza el estado de validación
-  this.formInstance.get('compra')?.updateValueAndValidity();
-  this.formInstance.get('cuenta_gasto')?.updateValueAndValidity();
-  this.formInstance.get('concepto')?.updateValueAndValidity();
-}
 
   onSubmit(){
     if((this.formInstance.status != 'INVALID')){  
+      const formData = this.formInstance.getRawValue();
       if(!this.instanceToEdit){
-        this.addInstance(this.formInstance.value);
+        this.addInstance(formData);
       }
       else{
-        this.formInstance.value['id'] = this.instanceToEdit.id;
+        formData['id'] = this.instanceToEdit.id;
         this.updateInstance(this.formInstance.value);
         this.principalService.oneItem.next(null);
       }}
@@ -278,7 +327,8 @@ onTipoOperacionChange() {
       
     }
 
-    }
+  }
+  
   
     
   ngOnDestroy(): void {

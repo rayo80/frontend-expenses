@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IListColums } from 'app/shared/components/list-base/list-base.types';
 import { PaymentsService } from '../payments.service';
 import { PaymentsFormComponent } from '../form/form.component';
+import { PaymentsSimpleFormComponent } from '../payment_simple_form/payment_simple_form.component';
+import { PaymentSelectorComponent } from '../payment-selector-form/payment-selector-form.component';
 
 
 
@@ -49,5 +51,5 @@ export class ListComponent {
 
   ]
 
-  modal: any = PaymentsFormComponent
+  modal: any = PaymentSelectorComponent;
 }

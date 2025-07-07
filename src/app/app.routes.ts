@@ -81,6 +81,7 @@ export const appRoutes: Route[] = [
             {path: 'productos', loadChildren: () => import('app/modules/apps/productos/productos.module').then(m => m.ProductosModule)},
             {path: 'pagos', loadChildren: () => import('app/modules/apps/payments/payments.module').then(m => m.PaymentsModule)},
             {path: 'transferencias', loadChildren: () => import('app/modules/apps/transferences/transferences.module').then(m => m.TransferencesModule)},
+            {path: 'reportes', loadChildren: () => import('app/modules/apps/reports-viewer/reports-viewer.module').then(m => m.ReportViewerModule)},
         ]
     }
 ];

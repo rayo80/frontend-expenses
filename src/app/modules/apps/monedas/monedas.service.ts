@@ -12,11 +12,6 @@ export class MonedasService extends ListServiceAbstract<CrudModel, SvCrudSchema>
   url = environment.url+'/api/monedas'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

@@ -2,6 +2,7 @@
 import { DateTime } from "luxon";
 import { ProductModel, SvProductSchema } from "../productos/productos.interface";
 import { SvMonedaSchema } from "../monedas/monedas.interface";
+import { SvCuentaContableSchema } from "../cuentas_contables/cuentas_contables.interface";
 
 
 interface SvProviderSimpleSchema{
@@ -12,6 +13,7 @@ interface SvProviderSimpleSchema{
 interface SvComprobanteTiposSchema{
     id: number;
     nombre: string;
+    cta_default: SvCuentaContableSchema
 }
 
 

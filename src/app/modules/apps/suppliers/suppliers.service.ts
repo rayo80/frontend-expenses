@@ -12,9 +12,9 @@ export class SuppliersService extends ListServiceAbstract<CrudModel, SvCrudSchem
   url = environment.url+'/api/suppliers'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
+  // constructor(_http: HttpClient) {
+  //   super(_http)
+  // }
 
 
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {

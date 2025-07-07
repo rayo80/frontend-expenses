@@ -1,16 +1,7 @@
 <div class="flex flex-col gap-2">
-    <h3 mat-dialog-title class="grow text-3xl font-semibold">Generar Movimiento de Pago </h3>
+    <h3 mat-dialog-title class="grow text-3xl font-semibold">Generar Pago Compra Nueva </h3>
       <mat-dialog-content class="p-2">
         <form [formGroup]="formInstance" class="grid grid-cols-12 grid-flow-row gap-2 max-w-screen-sm">
-          <!-- Tipo de operación -->
-          <div class="col-span-12 flex justify-center">
-            <mat-form-field appearance="fill" class="col-span-5 fuse-mat-bold fuse-mat-dense bg-accent">
-              <mat-select formControlName="tipo_operacion" (selectionChange)="onTipoOperacionChange()">
-              <mat-option [value]="1">Pago de Compra</mat-option>
-              <mat-option [value]="3">Egreso con Concepto</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
 
           <mat-form-field appearance="outline" class="col-span-2">
             <mat-label>Fecha</mat-label>
@@ -51,62 +42,97 @@
                 </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="col-span-4">
-            <mat-label>Total</mat-label>
-            <input formControlName="total" matInput>
-            <mat-error *ngIf="formInstance.get('total')?.errors?.['required']"
+          <mat-form-field appearance="outline" class="col-span-4" disabled="true">
+            <mat-label>Abonado</mat-label>
+            <input formControlName="abonado" matInput>
+            <mat-error *ngIf="formInstance.get('abonado')?.errors?.['required']"
                   [style.font-size]="'x-smaller'"
             >Campo requerido</mat-error>
           </mat-form-field>
 
+          <p class="text-lg font-medium col-span-12">Detalles de Compra Simple</p>
 
-          <div *ngIf="tipoOperacion === 1" class="bg-gray-50 dark:bg-accent-700 p-2 grid col-span-12 grid-cols-12 grid-flow-row gap-2 max-w-screen-sm">
-            <mat-form-field appearance="outline" class="col-span-5">
-              <mat-label>Compra</mat-label>
-              <mat-select formControlName="compra">
-                  <mat-option *ngFor="let compra of compras" [value]="compra.id">
-                    {{compra.numero_documento +'  '+ compra.proveedorName}}
-                  </mat-option>
+          <mat-form-field 
+              appearance="outline"  
+              class="col-span-12">
+                <mat-label>Proveedor</mat-label>
+                <mat-select formControlName="proveedor">
+                    <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                      {{supplier.codigo + '-' + supplier.nombre}}
+                    </mat-option>
+                </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="col-span-4">
+              <mat-label>Comprobante</mat-label>
+              <mat-select formControlName="tipo_documento">
+                <mat-option *ngFor="let comprobante of comprobante_tipos" [value]="comprobante.id">
+                      {{comprobante.codigo + '-' + comprobante.nombre}}
+                </mat-option>
               </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="col-span-3">
-              <mat-label>Numero de Documento Referencia</mat-label>
-              <input formControlName="referencia" matInput>
-              <mat-error *ngIf="formInstance.get('referencia')?.errors?.['required']"
-                    [style.font-size]="'x-smaller'"
-              >Campo requerido</mat-error>
-            </mat-form-field>
-          </div>
-
-          <div *ngIf="tipoOperacion === 3" class="bg-gray-50 dark:bg-accent-700 p-2 grid col-span-12 grid-cols-12 grid-flow-row gap-2 max-w-screen-sm">
-            
-            <mat-form-field appearance="outline" class="col-span-6">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="col-span-4">
               <mat-label>Numero de Documento Referencia</mat-label>
               <input formControlName="referencia" matInput>
               <mat-error *ngIf="formInstance.get('referencia')?.errors?.['required']"
                         [style.font-size]="'x-smaller'"
               >Campo requerido
               </mat-error>
-            </mat-form-field>
-            <mat-form-field 
+          </mat-form-field>
+
+
+          <mat-form-field 
               appearance="outline"  
-              class="col-span-6">
+              class="col-span-4">
                 <mat-label>Concepto</mat-label>
                 <mat-select formControlName="concepto">
                     <mat-option *ngFor="let concepto of products" [value]="concepto.id">
                       {{concepto.codigo + '-' + concepto.name}}
                     </mat-option>
                 </mat-select>
-            </mat-form-field>
+          </mat-form-field>
 
-          </div>
+          <p class="text-lg font-medium col-span-12">Calculos</p>
+          <mat-form-field appearance="outline" class="col-span-3">
+            <mat-label>Tipo IGV</mat-label>
+            <mat-select formControlName="igv_tipo">
+                <mat-option *ngFor="let igv_tipo of igv_tipos" [value]="igv_tipo.id">
+                  {{igv_tipo.name}}
+                </mat-option>
+            </mat-select>
 
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-3">
+              <mat-label>Igv</mat-label>
+              <input formControlName="igv" matInput>
+              <mat-error *ngIf="formInstance.get('igv')?.errors?.['required']"
+                        [style.font-size]="'x-smaller'"
+              >Campo requerido
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-3">
+              <mat-label>Cantidad</mat-label>
+              <input formControlName="cantidad" matInput>
+              <mat-error *ngIf="formInstance.get('cantidad')?.errors?.['required']"
+                        [style.font-size]="'x-smaller'"
+              >Campo requerido
+              </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="col-span-3">
+              <mat-label>Total</mat-label>
+              <input formControlName="total" matInput>
+              <mat-error *ngIf="formInstance.get('total')?.errors?.['required']"
+                        [style.font-size]="'x-smaller'"
+              >Campo requerido
+              </mat-error>
+          </mat-form-field>
+
+
+          <p class="text-lg font-medium col-span-12">Cuenta Contable</p>
           <mat-form-field 
             appearance="outline"  
-            [ngClass]="{
-                'col-span-4': tipoOperacion === 1,
-                'col-span-6': tipoOperacion === 3
-              }">
+            class='col-span-12'>
               <mat-label>Cuenta</mat-label>
               <mat-select formControlName="cuenta_gasto">
                   <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">

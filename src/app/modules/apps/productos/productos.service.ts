@@ -12,11 +12,6 @@ export class ProductsService extends ListServiceAbstract<CrudModel, SvCrudSchema
   url = environment.url+'/api/products'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

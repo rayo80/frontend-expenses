@@ -28,7 +28,8 @@ export class FormComponent {
     this.formInstance = this.fbuild.group({
       codigo: ['', Validators.required],
       nombre: ['', Validators.required],
-      cta_default: ['']
+      cta_default: [''],
+      cta_cobrar: [''],
     });
   }
 
@@ -50,13 +51,13 @@ export class FormComponent {
     )
   }
 
-    getCuentas(){
-        this.cuentasService.getListCache()
-          .pipe(takeUntil(this.hasDetroyed$))
-          .subscribe(
-          (val) => this.cuentas = val  
-          )
-    }
+  getCuentas(){
+    this.cuentasService.getListCache()
+      .pipe(takeUntil(this.hasDetroyed$))
+        .subscribe(
+        (val) => this.cuentas = val  
+        )
+  }
 
   ngOnInit(): void {
     // Si vas a editar, carga los datos aquí
@@ -66,7 +67,8 @@ export class FormComponent {
       this.formInstance.patchValue({
         codigo: this.instanceToEdit.codigo,
         nombre: this.instanceToEdit.nombre,
-        cta_default: this.instanceToEdit.cta_default?.id
+        cta_default: this.instanceToEdit.cta_default?.id,
+        cta_cobrar: this.instanceToEdit.cta_cobrar?.id
       });
     }
   }

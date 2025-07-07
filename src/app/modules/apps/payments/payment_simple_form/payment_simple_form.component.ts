@@ -1,6 +1,6 @@
 
 // Removed unused import
-import { SuppliersService } from './../../suppliers/suppliers.service';
+import { SuppliersService } from '../../suppliers/suppliers.service';
 import { Component, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -28,11 +28,11 @@ import { CuentasContablesService } from '../../cuentas_contables/cuentas_contabl
 
 
 @Component({
-  selector: 'app-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  selector: 'app-payment-simple-form',
+  templateUrl: './payment_simple_form.component.html',
+  styleUrls: ['./payment_simple_form.component.scss']
 })
-export class PaymentsFormComponent {
+export class PaymentsSimpleFormComponent {
 
   hasDetroyed$ = new Subject<boolean>();
 
@@ -46,7 +46,7 @@ export class PaymentsFormComponent {
       private paymentMethodsServices: PaymentMethodsService,
       private centralsServices: CajaCentralService,
       private cuentasContablesService: CuentasContablesService,
-      public dialogRef:MatDialogRef<PaymentsFormComponent>) { }
+      public dialogRef:MatDialogRef<PaymentsSimpleFormComponent>) { }
 
 
   formInstance:FormGroup;
@@ -195,6 +195,7 @@ export class PaymentsFormComponent {
       cuenta_gasto: [null],
       concepto: [null],
       referencia: [null],
+      detalle: [null],
       moneda: ['', [Validators.required]],
       metodo: ['', [Validators.required]],
       total: ['', [Validators.required]],
@@ -203,6 +204,8 @@ export class PaymentsFormComponent {
       hora: ['', Validators.required],
       cargo: [null],
     })
+    this.formInstance.get('referencia')?.disable();
+    this.formInstance.getRawValue();
 
     // Cuando cambia la compra, setea la cuenta contable asociada
     this.formInstance.get('compra')?.valueChanges
@@ -212,10 +215,15 @@ export class PaymentsFormComponent {
         if (compraId && this.compras) {
           const compraSeleccionada: PurchasesModel = this.compras.find(c => c.id === compraId);
           console.log("Compra encontrada:", compraSeleccionada.tipo_documento);
-          // Ajusta el nombre del campo según tu modelo de compra
+
           if (compraSeleccionada && compraSeleccionada.tipo_documento){
             console.log("Cuenta contable por defecto:", compraSeleccionada.tipo_documento.cta_default);
             this.formInstance.get('cuenta_gasto')?.setValue(compraSeleccionada.tipo_documento.cta_default);
+          }
+          // Ajusta el nombre del campo según tu modelo de compra
+          if (compraSeleccionada && compraSeleccionada.numero_documento){
+          console.log("Número de documento:", compraSeleccionada.numero_documento);
+            this.formInstance.get('referencia')?.setValue(compraSeleccionada.numero_documento);
           }
         }
       });
@@ -229,41 +237,42 @@ export class PaymentsFormComponent {
   }
 
 
-onTipoOperacionChange() {
-  this.tipoOperacion = this.formInstance.get('tipo_operacion')?.value;
+// onTipoOperacionChange() {
+//   this.tipoOperacion = this.formInstance.get('tipo_operacion')?.value;
 
-  // Limpia los valores y validadores
-  this.formInstance.get('compra')?.reset();
-  this.formInstance.get('cuenta_gasto')?.reset();
-  this.formInstance.get('concepto')?.reset();
+//   // Limpia los valores y validadores
+//   this.formInstance.get('compra')?.reset();
+//   this.formInstance.get('cuenta_gasto')?.reset();
+//   this.formInstance.get('concepto')?.reset();
 
-  // Primero, limpia todos los validadores
-  this.formInstance.get('compra')?.clearValidators();
-  this.formInstance.get('cuenta_gasto')?.clearValidators();
-  this.formInstance.get('concepto')?.clearValidators();
+//   // Primero, limpia todos los validadores
+//   this.formInstance.get('compra')?.clearValidators();
+//   this.formInstance.get('cuenta_gasto')?.clearValidators();
+//   this.formInstance.get('concepto')?.clearValidators();
 
-  if (this.tipoOperacion === 1) {
-    // Pago de Compra: compra y cuenta_destino requeridos
-    this.formInstance.get('compra')?.setValidators([Validators.required]);
-  } else if (this.tipoOperacion === 3) {
-    // Egreso con Concepto: cuenta_destino requerido, concepto podría ser requerido si lo usas
-    // Si concepto es requerido, descomenta:
-    this.formInstance.get('concepto')?.setValidators([Validators.required]);
-  }
+//   if (this.tipoOperacion === 1) {
+//     // Pago de Compra: compra y cuenta_destino requeridos
+//     this.formInstance.get('compra')?.setValidators([Validators.required]);
+//   } else if (this.tipoOperacion === 3) {
+//     // Egreso con Concepto: cuenta_destino requerido, concepto podría ser requerido si lo usas
+//     // Si concepto es requerido, descomenta:
+//     this.formInstance.get('concepto')?.setValidators([Validators.required]);
+//   }
 
-  // Actualiza el estado de validación
-  this.formInstance.get('compra')?.updateValueAndValidity();
-  this.formInstance.get('cuenta_gasto')?.updateValueAndValidity();
-  this.formInstance.get('concepto')?.updateValueAndValidity();
-}
+//   // Actualiza el estado de validación
+//   this.formInstance.get('compra')?.updateValueAndValidity();
+//   this.formInstance.get('cuenta_gasto')?.updateValueAndValidity();
+//   this.formInstance.get('concepto')?.updateValueAndValidity();
+// }
 
   onSubmit(){
     if((this.formInstance.status != 'INVALID')){  
+      const formData = this.formInstance.getRawValue();
       if(!this.instanceToEdit){
-        this.addInstance(this.formInstance.value);
+        this.addInstance(formData);
       }
       else{
-        this.formInstance.value['id'] = this.instanceToEdit.id;
+        formData['id'] = this.instanceToEdit.id;
         this.updateInstance(this.formInstance.value);
         this.principalService.oneItem.next(null);
       }}
@@ -278,7 +287,7 @@ onTipoOperacionChange() {
       
     }
 
-    }
+  }
   
     
   ngOnDestroy(): void {

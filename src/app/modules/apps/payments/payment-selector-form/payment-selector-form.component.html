@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="grow text-3xl font-semibold">Tipo de operación</h2>
+
+<mat-dialog-content>
+  <mat-button-toggle-group (change)="onSelect($event.value)" exclusive>
+    <mat-button-toggle [value]="true">Con Compra</mat-button-toggle>
+    <mat-button-toggle [value]="false">Sin Compra</mat-button-toggle>
+  </mat-button-toggle-group>
+</mat-dialog-content>

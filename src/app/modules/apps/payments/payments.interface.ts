@@ -1,3 +1,4 @@
+import { CuentaContableModel, SvCuentaContableSchema } from "../cuentas_contables/cuentas_contables.interface";
 import { SvMonedaSchema } from "../monedas/monedas.interface";
 import { PurchasesModel, SvPurchasesSchema } from "../purchases/purchases.interface";
 
@@ -17,6 +18,7 @@ export interface SvPaymentSchema{
     metodo: SvPaymentMethodSchema;
     referencia: string;
     total: number;
+    cuenta_destino?: SvCuentaContableSchema;
 }
 
 
@@ -27,6 +29,7 @@ export class PaymentModel {
     detalle: string;
     metodo: SvPaymentMethodSchema;
     moneda: SvMonedaSchema;
+    cuenta_destino: CuentaContableModel | null;
     fecha: Date;
     total: number;
     
@@ -39,6 +42,7 @@ export class PaymentModel {
         this.total = data.total;
         this.compra = new PurchasesModel(data.compra);
         this.metodo = data.metodo;
+        this.cuenta_destino = data.cuenta_destino ? new CuentaContableModel(data.cuenta_destino) : null;
     }
 
     get monedaDivisa() : string {

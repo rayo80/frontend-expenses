@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, shareReplay, Subject, tap, throwError } from 'rxjs';
 import { ICrudModel,  } from './list-base.types';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -23,9 +23,10 @@ export abstract class ListServiceAbstract<IModel extends ICrudModel, Response> {
   // ------------------------
 
   //Mi base ya ejecuta acciones con HTTP
-  constructor(private _http: HttpClient) { }
+  // constructor(private _http: HttpClient) { 
+  // }
 
-
+  _http: HttpClient = inject(HttpClient)
   abstract interfaceToModelAbstract(data: Response): IModel;
 
   // Pide la lista al servidor y actualiza 

@@ -137,6 +137,10 @@ export class ListBaseComponent<IModel extends ICrudModel, Response>
     this.triggerContextMenu(event, row);
   }
 
+  onClickRow(row: ICrudModel) {
+    
+  }
+
   onClickMenu(row: IModel, menuItem: IMenu) {
     switch (menuItem.actions) {
       case ActionsMenu.DELETE:

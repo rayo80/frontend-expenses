@@ -44,6 +44,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon : 'heroicons_outline:currency-dollar',
         link : '/transferencias'
     },
+        {
+        id   : 'reportes',
+        title: 'Reportes',
+        type : 'basic',
+        icon : 'heroicons_outline:document-minus',
+        link : '/reportes'
+    },
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {

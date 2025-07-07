@@ -31,9 +31,14 @@ export class ListComponent {
       'code': 'codigo',
       'show': true
     },
-        {      
-      'name': 'Cuenta Contable por Defecto',
+    {      
+      'name': 'Cuenta Contable por Pagar',
       'code': 'ctaDefaultName',
+      'show': true
+    },
+            {      
+      'name': 'Cuenta Contable por Cobrar',
+      'code': 'ctaCobrarName',
       'show': true
     },
   ]

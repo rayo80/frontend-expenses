@@ -12,11 +12,6 @@ export class CajaCentralService extends ListServiceAbstract<CrudModel, SvCrudSch
   url = environment.url+'/api/centrales'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

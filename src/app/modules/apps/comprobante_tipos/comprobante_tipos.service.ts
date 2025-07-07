@@ -12,11 +12,6 @@ export class ComprobanteTiposService extends ListServiceAbstract<CrudModel, SvCr
   url = environment.url+'/api/comprobantes_tipo'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

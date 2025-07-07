@@ -12,11 +12,6 @@ export class PaymentMethodsService extends ListServiceAbstract<CrudModel, SvCrud
   url = environment.url+'/api/constants?table=METHODS'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

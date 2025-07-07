@@ -12,9 +12,9 @@ export class TransferenceService extends ListServiceAbstract<CrudModel, SvCrudSc
   url = environment.url+'/api/transferencias'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
+  // constructor(_http: HttpClient) {
+  //   super(_http)
+  // }
 
 
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {

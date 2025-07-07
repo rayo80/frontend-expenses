@@ -18,6 +18,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatSortModule} from '@angular/material/sort';
+import {MatRadioModule} from '@angular/material/radio';
 
 const materialModules = [
   MatButtonModule,
@@ -36,7 +37,7 @@ const materialModules = [
   MatSlideToggleModule,
   MatSidenavModule,
   MatInputModule,
-
+  MatRadioModule,
   MatDialogModule,
   MatPaginatorModule,
   MatSidenavModule,

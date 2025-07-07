@@ -1,11 +1,11 @@
 export interface SvConstantsSchema{
     id: number;
-    name: number;
+    name: string;
 }
 
 export class ConstantsModel {
     id: number;
-    name: number;
+    name: string;
 
     constructor(data: SvConstantsSchema){
         this.id = data.id;

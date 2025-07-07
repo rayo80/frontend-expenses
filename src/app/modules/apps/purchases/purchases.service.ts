@@ -12,11 +12,6 @@ export class PurchasesService extends ListServiceAbstract<CrudModel, SvCrudSchem
   url = environment.url+'/api/purchases'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

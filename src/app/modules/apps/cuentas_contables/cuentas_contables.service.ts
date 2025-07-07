@@ -12,11 +12,6 @@ export class CuentasContablesService extends ListServiceAbstract<CrudModel, SvCr
   url = environment.url+'/api/cuentas_contables'
 
 
-  constructor(_http: HttpClient) {
-    super(_http)
-  }
-
-
   interfaceToModelAbstract(data: SvCrudSchema): CrudModel {
     return new CrudModel(data)
   }

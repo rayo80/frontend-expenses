@@ -1,0 +1,47 @@
+<div *ngIf="!showViewer">
+  <form (ngSubmit)="onSubmit()" class="flex items-end gap-4">
+    <mat-form-field appearance="outline" class="min-w-[250px]">
+      <mat-label>Tipo de Reporte</mat-label>
+      <mat-select [(ngModel)]="reportType" name="reportType" required>
+        <mat-option *ngFor="let tipo of reportTypes" [value]="tipo.value">
+          {{ tipo.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!reportType">
+        Selecciona un tipo de reporte
+      </mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!reportType || loading">
+      <mat-icon>download</mat-icon>
+      Visualizar Reporte
+    </button>
+  </form>
+  <div *ngIf="errorMessage" class="text-red-600 mt-2">
+    {{ errorMessage }}
+  </div>
+</div>
+
+<div *ngIf="showViewer">
+  <button mat-button color="accent" (click)="volver()">
+    <mat-icon>arrow_back</mat-icon>
+    Volver
+  </button>
+  <button mat-raised-button color="primary" (click)="descargarExcel()" [disabled]="!excelFileUrl">
+    <mat-icon>download</mat-icon>
+    Descargar Excel
+  </button>
+  <div class="overflow-auto mt-4">
+    <table mat-table>
+      <thead>
+        <tr>
+          <th *ngFor="let header of excelHeaders">{{ header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of excelData">
+          <td *ngFor="let cell of row">{{ cell }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

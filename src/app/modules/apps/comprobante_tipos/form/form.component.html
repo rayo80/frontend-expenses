@@ -14,14 +14,22 @@
         <mat-error *ngIf="formInstance.get('nombre')?.errors?.['required']"
           class="text-xs">Campo requerido</mat-error>
       </mat-form-field>
-          <mat-form-field appearance="outline" class="col-span-8">
-            <mat-label>Cuenta</mat-label>
-            <mat-select formControlName="cta_default">
-                <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+      <mat-form-field appearance="outline" class="col-span-4">
+        <mat-label>Cuenta Pagar</mat-label>
+          <mat-select formControlName="cta_default">
+            <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
                   {{cuenta.codigo + " - " + cuenta.descripcion}}
-                </mat-option>
-            </mat-select>
-          </mat-form-field>
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-span-4">
+        <mat-label>Cuenta Cobrar</mat-label>
+          <mat-select formControlName="cta_cobrar">
+            <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+                  {{cuenta.codigo + " - " + cuenta.descripcion}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
     </form>
     <div class="alert alert-danger mt-2" *ngIf="error">
       Los campos no han sido rellenados correctamente
