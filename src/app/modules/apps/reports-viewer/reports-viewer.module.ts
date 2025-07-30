@@ -6,11 +6,13 @@ import { ReportViewerComponent } from './reports-viewer.component';
 import { PurchasesRoutingModule } from '../purchases/purchases-routing.module';
 import { ReportsViewerRoutingModule } from './reports-viewer-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
+import { FiltrosReporteE1 } from './report-E1/report-E1.component';
 
 
 @NgModule({
   declarations: [
-    ReportViewerComponent
+    ReportViewerComponent,
+    FiltrosReporteE1
   ],
   imports: [
     CommonModule,

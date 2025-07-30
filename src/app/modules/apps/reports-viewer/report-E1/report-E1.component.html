@@ -1,0 +1,11 @@
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha inicio</mat-label>
+        <input matInput type="date" formControlName="start">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha fin</mat-label>
+        <input matInput type="date" formControlName="end">
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">Generar Reporte</button>
+    </form>

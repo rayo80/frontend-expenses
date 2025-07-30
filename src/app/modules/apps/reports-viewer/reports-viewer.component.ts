@@ -8,13 +8,15 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./reports-viewer.component.scss']
 })
 export class ReportViewerComponent {
-  reportType: string;
+  reportType: number;
   reportTypes = [
-    { value: 'ventas', label: 'Reporte de Ventas' },
-    { value: 'compras', label: 'Reporte de Compras' },
-    // agrega más tipos según tu backend
+    { value: 'ventas', label: 'Ventas' },
+    { value: 1, label: 'Compras' },
+    { value: 'money_outputs', label: 'Salidas de Dinero' },
+    { value: 'purchase_items', label: 'Items de Compra' },
   ];
 
+  filtersData: any = {};
   errorMessage: string | null = null;
   loading = false;
 
@@ -26,15 +28,29 @@ export class ReportViewerComponent {
 
   constructor(private reportViewerService: ReportViewerService) {}
 
-  onSubmit() {
-    if (this.reportType) {
-      this.loading = true;
-      this.fetchReport(this.reportType);
-    }
+  onChangeReportType(reportType: number) {
+    this.reportType = reportType;
+    this.showViewer = false;
+    this.excelData = [];
+    this.excelHeaders = [];
   }
 
-  fetchReport(type: string) {
-    this.reportViewerService.getReport(type).subscribe(
+  onChildSubmit(filters) {
+    console.log('Received filters from child:', filters);
+      // El hijo manda a hacer esto
+      this.filtersData = filters;
+      this.fetchReport();
+  }
+  
+
+  fetchReport() {
+
+    const payload = {
+      type: this.reportType,
+      filters: this.filtersData
+    };
+    console.log('payload', payload);
+    this.reportViewerService.exportReport(payload).subscribe(
       (response: Blob) => {
         // Leer el archivo Excel
         const reader = new FileReader();
